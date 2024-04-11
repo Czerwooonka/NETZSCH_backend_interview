@@ -10,8 +10,6 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.URISyntaxException;
 
 /**
  * JavaFX App

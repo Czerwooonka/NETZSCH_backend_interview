@@ -29,7 +29,6 @@ public class WalkieTalkieClient extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         output.setText(message.substring(1, message.length() - 1));
-        System.out.println("received: " + message);
     }
 
     @Override

@@ -1,10 +1,10 @@
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Panel.css";
-import { ChangeEvent, useCallback, useEffect, useRef } from "react";
+import { ChangeEvent, useCallback } from "react";
 
 function Panel() {
   const { sendJsonMessage, lastJsonMessage, readyState } = useWebSocket<string>(
-    "ws://localhost:8080/"
+    "ws://localhost:8080?token=abc"
   );
 
   const handleSendMessage = useCallback(

@@ -1,57 +1,64 @@
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
 import { createServer } from "http";
+import { randomUUID } from "crypto";
+import { parse } from "url";
 
 const port = process.env.port || 8080;
+const connections = {};
+const users = {};
 
 const server = createServer();
 const wsServer = new WebSocketServer({ server });
 
-wsServer.on("connection", (connection) => {
-  console.log(`Received a new connection.`);
+const authenticate = (params) => {
+  let result = false;
 
-  connection.on("message", (message) => {
-    const content = JSON.parse(message.toString()).content;
-    // connection.send(JSON.stringify(content));
-    wsServer.clients.forEach((client) => client.send(JSON.stringify(content)));
-    console.log(connection.readyState);
-    console.log(content);
-  });
+  if (params.query) {
+    const token = params.query.split("=")[1];
+    if (token === "abc") {
+      result = true;
+    }
+  }
+
+  return result;
+};
+
+function broadcastMessage(toAdmins, message) {
+  const data = JSON.stringify(message);
+
+  for (let userId in connections) {
+    if (toAdmins ? users[userId].admin : !users[userId].admin) {
+      let client = connections[userId];
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    }
+  }
+}
+
+const handleMessage = (data, uuid) => {
+  const message = JSON.parse(data.toString());
+
+  if (users[uuid].admin) {
+    broadcastMessage(false, message.content);
+  } else {
+    broadcastMessage(true, message.content);
+  }
+};
+
+const handleClose = (uuid) => delete connections[uuid];
+
+wsServer.on("connection", (connection, req) => {
+  const isAdmin = authenticate(parse(req.url));
+
+  const uuid = randomUUID();
+  connections[uuid] = connection;
+  users[uuid] = { admin: isAdmin };
+
+  connection.on("message", (message) => handleMessage(message, uuid));
+  connection.on("close", () => handleClose(uuid));
 });
 
 server.listen(port, () => {
   console.log(`WebSocket server is running on port ${port}`);
 });
-
-// import express from "express";
-// import bodyParser from "body-parser";
-
-// const port = process.env.port || 8080;
-// const app = express();
-
-// app.use(bodyParser.json());
-
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
-
-// app.use((err, req, res, next) => {
-//   const statusCode = err.statusCode || 500;
-
-//   console.log(err.message, err.stack);
-
-//   res.status(statusCode).json({ message: err.message });
-// });
-
-// app.get("/", (req, res, next) => {
-//   res.json({ message: "ok" });
-// });
-
-// app.listen(port, () => {
-//   console.log(`Server listening on port ${port}...`);
-// });

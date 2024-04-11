@@ -18,7 +18,11 @@ public class WalkieTalkieClient extends WebSocketClient {
     }
 
     public void sendMessage(String message) {
-        send("{\"type\": \"newmessage\",\"content\": \"" + message + "\"}");
+        try {
+            send("{\"type\": \"newmessage\",\"content\": \"" + message + "\"}");
+        } catch (Exception ex) {
+            System.out.println("Can not send message!");
+        }
     }
 
     @Override
@@ -33,16 +37,11 @@ public class WalkieTalkieClient extends WebSocketClient {
 
     @Override
     public void onClose(int code, String reason, boolean remote) {
-        // The close codes are documented in class org.java_websocket.framing.CloseFrame
-        System.out.println(
-                "Connection closed by " + (remote ? "remote peer" : "us") + " Code: " + code + " Reason: "
-                        + reason);
     }
 
     @Override
     public void onError(Exception ex) {
-        ex.printStackTrace();
-        // if the error is fatal then onClose will be called additionally
+        System.out.println("Error occured!");
     }
 
 }

@@ -10,6 +10,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URISyntaxException;
 
 /**
@@ -30,8 +31,8 @@ public class App extends Application {
             TextArea taOutput = (TextArea) scene.lookup("#outputField");
             client = new WalkieTalkieClient(taOutput);
             client.connect();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("Can not connect!");
         }
 
         TextArea taInput = (TextArea) scene.lookup("#inputField");

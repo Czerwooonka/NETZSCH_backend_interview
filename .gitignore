@@ -1,2 +1,3 @@
-web_app/frontend/node_modules
-web_app/backend/node_modules
+walkie_talkie_web_app/frontend/node_modules
+walkie_talkie_web_app/backend/node_modules
+walkie_talkie_desktop_app/target

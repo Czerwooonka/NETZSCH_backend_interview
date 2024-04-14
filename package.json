@@ -1,7 +1,10 @@
 {
     "scripts": {
-      "server": "cd ./walkie_talkie_web_app/backend && npm i && node index.js",
-      "app1": "walkie_talkie_desktop_app/maven/bin/mvn -f walkie_talkie_desktop_app/pom.xml clean javafx:run",
-      "app2": "cd ./walkie_talkie_web_app/frontend && npm i && npm start"
+        "windows-server": "cd .\\walkie_talkie_web_app\\backend && npm i && node index.js",
+        "windows-app1": "walkie_talkie_desktop_app\\maven\\bin\\mvn -f walkie_talkie_desktop_app\\pom.xml clean javafx:run",
+        "windows-app2": "cd .\\walkie_talkie_web_app\\frontend && npm i && npm start",
+        "linux-server": "cd ./walkie_talkie_web_app/backend && npm i && node index.js",
+        "linux-app1": "walkie_talkie_desktop_app/maven/bin/mvn -f walkie_talkie_desktop_app/pom.xml clean javafx:run",
+        "linux-app2": "cd ./walkie_talkie_web_app/frontend && npm i && npm start"
     }
   }
